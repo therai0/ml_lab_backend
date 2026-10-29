@@ -17,6 +17,4 @@ class LinearRegressionModel(db.Model):
     copyx:Mapped[bool] = mapped_column(bool,nullable=False)
     tolerance:Mapped[String]=mapped_column(String(255),nullable=False)
     positive:Mapped[bool]=mapped_column(bool,nullable=False)
-    train_accuracy:Mapped[int] = mapped_column(Integer,nullable=True)
-    test_accuracy:Mapped[int] = mapped_column(Integer,nullable=True)
     create_at:Mapped[datetime] = mapped_column(DateTime,server_default=func.now(),nullable=False)

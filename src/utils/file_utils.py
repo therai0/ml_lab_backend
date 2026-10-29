@@ -39,15 +39,32 @@ def file_validation(file):
     if file_size > MAX_SIZE:
         return "File size must not exceed 1MB",True 
 
-    # check the if there is null value or not in file.
-    df= pd.read_csv(file)
-    if df.isnull().any().any():
-        return "Null value in file",True
+    # Read and validate CSV
+    try:
+        df = pd.read_csv(file)
+        file.seek(0)  # Important: reset after reading
 
-    # check the string columns are there or not:
-    if "str" in df.dtypes.to_list():
-        return "Only encoded file are accepted",True 
-    return "",False  
+    except pd.errors.EmptyDataError:
+        file.seek(0)
+        return "CSV file is empty", True
+
+    except pd.errors.ParserError:
+        file.seek(0)
+        return "Invalid CSV format", True
+
+    # Check for null values
+    if df.isnull().any().any():
+        return "Null values are not allowed", True
+
+    # Check for non-numeric columns
+    if not all(
+        pd.api.types.is_numeric_dtype(dtype)
+        for dtype in df.dtypes
+    ):
+        return "Only encoded/numeric columns are accepted", True
+
+    return "", False
+
     
 
     
