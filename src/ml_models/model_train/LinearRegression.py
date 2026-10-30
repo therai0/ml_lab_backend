@@ -8,6 +8,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from src.utils.ml_utils import performance_metrix
+from src.config.filepath_config import config_preprocessor_path
+
 
 class LR:
     def __init__(self, **kwargs):
@@ -24,7 +26,6 @@ class LR:
             model = LinearRegression()
             df = pd.read_csv(self.filepath)
             df.drop(["Unnamed: 0"],axis=1,inplace=True)
-            print(df.head())
             X = df.drop([self.target_column],axis=1)
             y = df[self.target_column]
             X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2)
@@ -37,7 +38,7 @@ class LR:
             y_pred = model.predict(X_test_scaled)
 
             performance = performance_metrix(y_test,y_pred,is_classification=False)
-            return performance
+            return performance,scalar,model
         except Exception as e:
             raise CustomException(e)
         

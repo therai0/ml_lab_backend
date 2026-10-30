@@ -7,6 +7,7 @@ from flask_cors import CORS
 
 from src.database.db import config_database, create_table
 from src.models.users_model import Users
+from src.models.ml_model import TrainedModel
 from src.exception.exception import CustomException
 
 # routes

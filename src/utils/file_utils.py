@@ -23,7 +23,7 @@ def save_file(file_path:str,file):
         CustomException(e)
 
 
-def file_validation(file):
+def file_validation(file,target_column):
     if not file:
         return "File is not provided",False 
 
@@ -44,6 +44,9 @@ def file_validation(file):
         df = pd.read_csv(file)
         file.seek(0)  # Important: reset after reading
 
+        if not target_column in df.columns:
+            return "Invalid target column",True
+
     except pd.errors.EmptyDataError:
         file.seek(0)
         return "CSV file is empty", True
@@ -57,6 +60,7 @@ def file_validation(file):
         return "Null values are not allowed", True
 
     # Check for non-numeric columns
+    
     if not all(
         pd.api.types.is_numeric_dtype(dtype)
         for dtype in df.dtypes

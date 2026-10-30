@@ -1,5 +1,7 @@
 
-
+import os 
+import pickle
+from src.exception.exception import CustomException
 from sklearn.metrics import (
     # Regression metrics
     mean_absolute_error,
@@ -26,6 +28,7 @@ from sklearn.metrics import (
 )
 
 
+# function to calculate the performance metrix of model
 def performance_metrix(y, y_pred, is_classification: bool):
     if is_classification:
         return {
@@ -64,3 +67,40 @@ def performance_metrix(y, y_pred, is_classification: bool):
                 mean_absolute_percentage_error(y, y_pred)
             ),
         }
+
+
+
+# function to save the ml model
+def save_model(filepath,model):
+    try:
+        # Create directory if it doesn't exist
+        file_dir = os.path.dirname(filepath)
+
+        if file_dir:
+            os.makedirs(file_dir, exist_ok=True)
+
+        # Save model
+        with open(filepath, "wb") as file:
+            pickle.dump(model, file)
+        return True
+
+    except Exception as e:
+        raise CustomException(f"Failed to save model: {str(e)}")
+
+
+
+# function to save the preprocessor file
+def save_preprocessor(filepath: str, preprocessor):
+    try:
+        file_dir = os.path.dirname(filepath)
+
+        if file_dir:
+            os.makedirs(file_dir, exist_ok=True)
+
+        with open(filepath, "wb") as file:
+            pickle.dump(preprocessor, file)
+
+        return True
+
+    except Exception as e:
+        raise Exception(f"Failed to save preprocessor: {str(e)}")
